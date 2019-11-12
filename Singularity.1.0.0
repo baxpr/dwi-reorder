@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: alpine:3.10.3
+
+%help
+
+%files
+
+  src /opt  
+
+%post
+  
+  # For installs
+  apk --update add python3
+
+  # For X
+  apk --updateadd lib-x11 xvfb
+
+  # For PDF outputs
+  apk --update add imagemagick
+  
+  # Create input/output directories for binding
+  mkdir /INPUTS && mkdir /OUTPUTS
+
+
+%environment
+
+
+%runscript
+
+#  xvfb-run --server-num=$(($$ + 99)) \
+#  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
+#  bash /opt/runscripts/run_everything.sh "$@"
+
