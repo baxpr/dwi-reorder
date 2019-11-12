@@ -13,7 +13,7 @@ From: alpine:3.10.3
   apk --update add python3
 
   # For X
-  apk --updateadd lib-x11 xvfb
+  apk --update add lib-x11 xvfb
 
   # For PDF outputs
   apk --update add imagemagick
