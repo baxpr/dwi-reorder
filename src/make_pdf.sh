@@ -34,5 +34,5 @@ convert \
 -gravity NorthWest -pointsize 24 -annotate +20+20 "${info}" \
 -gravity SouthWest -pointsize 24 -annotate +20+200 \
 "First b values:\n$bval\n\nFirst b vectors:\n$bvec" \
-page.png
+page.pdf
 
