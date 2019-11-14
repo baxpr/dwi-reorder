@@ -23,8 +23,8 @@ fsleyes render \
 # Convert to PDF
 
 info="dwi_reorder\n${project} ${subject} ${session} ${scan}"
-bval=`cut -d " " -f 1-8 "${bval_file}"`
-bvec=`cut -d " " -f 1-8 "${bvec_file}"`
+bval=`cut -d " " -f 1-9 "${bval_file}"`
+bvec=`cut -d " " -f 1-9 "${bvec_file}"`
 
 convert \
 -size 1224x1584 xc:white \
