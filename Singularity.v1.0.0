@@ -36,19 +36,29 @@ From: ubuntu:18.04
   # Get python libraries
   pip3 install nibabel pandas
   
+  # Get fsleyes via pip. wxpython and pathlib2 are required first
+  #   https://github.com/wxWidgets/Phoenix/blob/master/README.rst#prerequisites
+  #   https://wxpython.org/pages/downloads/
+  apt-get install -y dpkg-dev build-essential freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev \
+      libgstreamer-plugins-base1.0-dev libgtk-3-dev libjpeg-dev libnotify-dev libpng-dev \
+      libsdl1.2-dev libsdl2-dev libsm-dev libtiff-dev libwebkit2gtk-4.0-dev libxtst-dev
+  pip3 install -f \
+      https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+  pip3 install pathlib2 fsleyes
+
   # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
-  #sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
-  #  /etc/ImageMagick-6/policy.xml
+  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
+    /etc/ImageMagick-6/policy.xml
 
   # Create input/output directories for binding
   mkdir /INPUTS && mkdir /OUTPUTS
 
 
 %environment
+  PATH="/opt/src:${PATH}"
+
 
 %runscript
-
-#  xvfb-run --server-num=$(($$ + 99)) \
-#  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
-#  bash /opt/fsthalconn/bin/run_spm12.sh \
-#  /usr/local/MATLAB/MATLAB_Runtime/v92 function fsthalconn "$@"
+  xvfb-run --server-num=$(($$ + 99)) \
+  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
+  python3 resort_b0.py "$@"
