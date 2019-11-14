@@ -21,9 +21,9 @@ bval_txt = args.bval_txt
 bvec_txt = args.bvec_txt
 out_pfx = args.out_pfx
 
-dwi_outfile = out_pfx + '_resort.nii.gz'
-bval_outfile = out_pfx + '_resort.bval'
-bvec_outfile = out_pfx + '_resort.bvec'
+dwi_outfile = out_pfx + '.nii.gz'
+bval_outfile = out_pfx + '.bval'
+bvec_outfile = out_pfx + '.bvec'
 
 dwi_img = nibabel.load(dwi_niigz)
 dwi_data = dwi_img.get_fdata()
