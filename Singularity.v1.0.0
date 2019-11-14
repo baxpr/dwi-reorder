@@ -1,33 +1,38 @@
 Bootstrap: docker
-From: alpine:3.10.3
+From: ubuntu:18.04
 
 %help
 
-%files
 
-  src /opt  
+%files
+  src    /opt
+
+ 
+%labels
+  Maintainer baxter.rogers@vanderbilt.edu
+
 
 %post
+  apt-get update
+  apt-get install -y xvfb ghostscript imagemagick python3 python3-pip
   
-  # For installs
-  apk --update add python3
-
-  # For X
-  apk --update add lib-x11 xvfb
-
-  # For PDF outputs
-  apk --update add imagemagick
+  # Get python libraries
+  pip3 install nibabel pandas
   
+  # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
+  #sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
+  #  /etc/ImageMagick-6/policy.xml
+
   # Create input/output directories for binding
   mkdir /INPUTS && mkdir /OUTPUTS
 
 
 %environment
 
-
 %runscript
 
 #  xvfb-run --server-num=$(($$ + 99)) \
 #  --server-args='-screen 0 1600x1200x24 -ac +extension GLX' \
-#  bash /opt/runscripts/run_everything.sh "$@"
+#  bash /opt/fsthalconn/bin/run_spm12.sh \
+#  /usr/local/MATLAB/MATLAB_Runtime/v92 function fsthalconn "$@"
 
