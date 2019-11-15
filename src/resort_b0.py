@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 #
 # Move b=0 frames to the beginning of a DWI NIFTI/BVAL/BVEC set to permit topup in dtiQA_v6
 
