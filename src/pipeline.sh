@@ -48,12 +48,12 @@ echo "$bval_file"
 echo "$bvec_file"
 
 # Reorder volumes
-python3 resort_b0.py \
+resort_b0.py \
 	--dwi_niigz "${dwi_niigz}" --bval_txt "${bval_txt}" \
 	--bvec_txt "${bvec_txt}" --out_pfx "${outdir}"/DTI_resort
 
 # Generate PDF
-bash make_pdf.sh \
+make_pdf.sh \
 	--project "${project}" --subject "${subject}" \
 	--session "${session}" --scan "${scan}" \
 	--dwi_file "${outdir}"/DTI_resort.nii.gz \
