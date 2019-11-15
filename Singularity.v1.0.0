@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ubuntu:18.04
+From: ubuntu:bionic-20191029
 
 %help
 
@@ -14,48 +14,62 @@ From: ubuntu:18.04
 
 %post
   apt-get update
-  apt-get install -y zip unzip
+
+  # libc-dev
+  apt-get install -y linux-libc-dev
+  
+  # xvfb for headless fsleyes
+  apt-get install -y xvfb
+  
+  # fsleyes binary
+  cd /opt
+  wget -q https://fsl.fmrib.ox.ac.uk/fsldownloads/fsleyes/FSLeyes-0.31.2-ubuntu1804.tar.gz
+  tar zxf FSLeyes-0.31.2-ubuntu1804.tar.gz
+  rm FSLeyes-0.31.2-ubuntu1804.tar.gz
+  
+  
+#  apt-get install -y zip unzip
     
   #apt-get install -y linux-libc-dev
   # Workaround for filename case collision in linux-libc-dev
   # https://superuser.com/questions/1238903/cant-install-linux-libc-dev-in-ubuntu-on-windows
-  apt-get install -y binutils xz-utils 
-  mkdir pkgtemp
-  cd pkgtemp
-  apt-get download linux-libc-dev
-  ar x linux-libc-dev*deb
-  tar xJf data.tar.xz
-  tar cJf data.tar.xz ./usr
-  ar rcs linux-libc-dev*.deb debian-binary control.tar.xz data.tar.xz
-  dpkg -i linux-libc-dev*.deb
-  cd ..
-  rm -fr pkgtemp
+#  apt-get install -y binutils xz-utils 
+#  mkdir pkgtemp
+#  cd pkgtemp
+#  apt-get download linux-libc-dev
+#  ar x linux-libc-dev*deb
+#  tar xJf data.tar.xz
+#  tar cJf data.tar.xz ./usr
+#  ar rcs linux-libc-dev*.deb debian-binary control.tar.xz data.tar.xz
+#  dpkg -i linux-libc-dev*.deb
+#  cd ..
+#  rm -fr pkgtemp
   
-  apt-get install -y xvfb ghostscript imagemagick python python-pip
+#  apt-get install -y xvfb ghostscript imagemagick python python-pip
   
   # Get python libraries
-  pip install nibabel pandas
+#  pip install nibabel pandas
   
   # Get fsleyes via pip. wxpython and pathlib2 are required first
   #   https://github.com/wxWidgets/Phoenix/blob/master/README.rst#prerequisites
   #   https://wxpython.org/pages/downloads/
-  apt-get install -y dpkg-dev build-essential freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev \
-      libgstreamer-plugins-base1.0-dev libgtk-3-dev libjpeg-dev libnotify-dev libpng-dev \
-      libsdl1.2-dev libsdl2-dev libsm-dev libtiff-dev libwebkit2gtk-4.0-dev libxtst-dev
-  pip install -f \
-      https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
-  pip install pathlib2 fsleyes
+#  apt-get install -y dpkg-dev build-essential freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev \
+#      libgstreamer-plugins-base1.0-dev libgtk-3-dev libjpeg-dev libnotify-dev libpng-dev \
+#      libsdl1.2-dev libsdl2-dev libsm-dev libtiff-dev libwebkit2gtk-4.0-dev libxtst-dev
+#  pip install -f \
+#      https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+#  pip install pathlib2 fsleyes
 
   # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
-  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
-    /etc/ImageMagick-6/policy.xml
+#  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
+#    /etc/ImageMagick-6/policy.xml
 
   # Create input/output directories for binding
   mkdir /INPUTS && mkdir /OUTPUTS
 
 
 %environment
-  PATH="/opt/src:${PATH}"
+  PATH="/opt/src:/opt/FSLeyes:${PATH}"
 
 
 %runscript
