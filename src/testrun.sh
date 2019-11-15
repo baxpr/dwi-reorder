@@ -1,4 +1,5 @@
-bash pipeline.sh \
+#!/bin/sh
+xvfb_wrapper.sh \
 	--project TESTPROJ \
 	--subject TESTSUBJ \
 	--session TESTSESS \

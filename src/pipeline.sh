@@ -44,8 +44,8 @@ done
 
 echo "$project" "$subject" "$session" "$scan"
 echo "$dwi_niigz"
-echo "$bval_file"
-echo "$bvec_file"
+echo "$bval_txt"
+echo "$bvec_txt"
 
 # Reorder volumes
 resort_b0.py \

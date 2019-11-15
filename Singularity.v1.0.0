@@ -31,10 +31,10 @@ From: ubuntu:18.04
   cd ..
   rm -fr pkgtemp
   
-  apt-get install -y xvfb ghostscript imagemagick python3 python3-pip
+  apt-get install -y xvfb ghostscript imagemagick python python-pip
   
   # Get python libraries
-  pip3 install nibabel pandas
+  pip install nibabel pandas
   
   # Get fsleyes via pip. wxpython and pathlib2 are required first
   #   https://github.com/wxWidgets/Phoenix/blob/master/README.rst#prerequisites
@@ -42,9 +42,9 @@ From: ubuntu:18.04
   apt-get install -y dpkg-dev build-essential freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev \
       libgstreamer-plugins-base1.0-dev libgtk-3-dev libjpeg-dev libnotify-dev libpng-dev \
       libsdl1.2-dev libsdl2-dev libsm-dev libtiff-dev libwebkit2gtk-4.0-dev libxtst-dev
-  pip3 install -f \
+  pip install -f \
       https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
-  pip3 install pathlib2 fsleyes
+  pip install pathlib2 fsleyes
 
   # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
   sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
