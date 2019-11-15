@@ -5,5 +5,4 @@ local*.sh
 *.tgz
 *.zip
 *.simg
-sandbox
-
+sandbox*
