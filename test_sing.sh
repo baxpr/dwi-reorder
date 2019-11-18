@@ -7,7 +7,6 @@ singularity run \
 --bind INPUTS:/INPUTS \
 --bind OUTPUTS:/OUTPUTS \
 baxpr-dwi-reorder-master-v1.0.0.simg \
-xfvb-run ${xvfb_opts} pipeline.sh \
 --project TESTPROJ \
 --subject TESTSUBJ \
 --session TESTSESS \
@@ -16,3 +15,5 @@ xfvb-run ${xvfb_opts} pipeline.sh \
 --bval_txt /INPUTS/DTI.bval \
 --bvec_txt /INPUTS/DTI.bvec \
 --outdir /OUTPUTS
+
+

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sudo singularity build --sandbox sandbox Singularity.v1.0.0
+sudo singularity build test.simg Singularity.v1.0.0 
 

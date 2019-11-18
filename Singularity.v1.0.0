@@ -71,7 +71,9 @@ From: ubuntu:18.04
   . ${FSLDIR}/etc/fslconf/fsl.sh
   export PATH=${FSLDIR}/bin:${PATH}
 
+  # Path
+  export PATH=/opt/src:${PATH}
 
 %runscript
-  bash "$@"
+  wrapper.sh "$@"
 
