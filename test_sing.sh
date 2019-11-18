@@ -1,9 +1,13 @@
 #!/bin/bash
+
+xvfb_opts="-n $(($$ + 99)) -s '-screen 0 1600x1200x24 -ac +extension GLX'"
+
 singularity run \
 --cleanenv \
 --bind INPUTS:/INPUTS \
 --bind OUTPUTS:/OUTPUTS \
 baxpr-dwi-reorder-master-v1.0.0.simg \
+xfvb-run ${xvfb_opts} pipeline.sh \
 --project TESTPROJ \
 --subject TESTSUBJ \
 --session TESTSESS \

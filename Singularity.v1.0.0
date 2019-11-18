@@ -1,6 +1,11 @@
 Bootstrap: docker
 From: ubuntu:18.04
 
+%files
+
+  src /opt
+
+
 %post
 
   fsl_version=6.0.2
