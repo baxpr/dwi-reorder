@@ -1,18 +1,10 @@
 Bootstrap: docker
-From: ubuntu:bionic-20191029
-
-%help
-
-
-%files
-  src    /opt
-
- 
-%labels
-  Maintainer baxter.rogers@vanderbilt.edu
-
+From: ubuntu:18.04
 
 %post
+
+  fsl_version=6.0.2
+
   apt-get update
 
   # Workaround for filename case collision in linux-libc-dev
@@ -28,47 +20,53 @@ From: ubuntu:bionic-20191029
   dpkg -i linux-libc-dev*.deb
   cd .. && rm -r pkgtemp
 
-  apt-get install -y wget                      # So useful
-  apt-get install -y xvfb                      # for headless X11
-  apt-get install -y python3-pip               # Also so useful
-  apt-get install -y ghostscript imagemagick   # for PDF generation
+  # FSL dependencies, h/t https://github.com/MPIB/singularity-fsl
+  #    debian vs ubuntu:
+  #            libjpeg62-turbo ->  libjpeg-turbo8
+  #            libmng1         ->  libmng2
+  apt-get -y install wget python-minimal libgomp1 ca-certificates \
+          libglu1-mesa libgl1-mesa-glx libsm6 libice6 libxt6 \
+          libjpeg-turbo8 libpng16-16 libxrender1 libxcursor1 \
+          libxinerama1 libfreetype6 libxft2 libxrandr2 libmng2 \
+          libgtk2.0-0 libpulse0 libasound2 libcaca0 libopenblas-base \
+          bzip2 dc bc
+
+  # Get and install main FSL package
+  cd /usr/local
+  wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-${fsl_version}-centos7_64.tar.gz
+  tar zxf fsl-${fsl_version}-centos7_64.tar.gz
+  rm fsl-${fsl_version}-centos7_64.tar.gz
+  
+  # FSL setup
+  export FSLDIR=/usr/local/fsl
+  . ${FSLDIR}/etc/fslconf/fsl.sh
+  export PATH=${FSLDIR}/bin:${PATH}
+
+  # Run the FSL python installer
+  ${FSLDIR}/etc/fslconf/fslpython_install.sh
+
+  # Headless X11 support
+  apt-get install -y xvfb
+  
+  # PNG and PDF tools
+  apt-get install -y ghostscript imagemagick
 
   # Python libraries for assessor code
-  pip3 install --upgrade pip3
+  apt-get install -y python3 python3-pip
   pip3 install nibabel pandas
-
-  # FSL info:
-  #   Mirrors:  https://fsl.fmrib.ox.ac.uk/fsldownloads/fslmirrorlist.txt
-  #                 (the only mirror is https://fsl.fmrib.ox.ac.uk/fsldownloads/)
-  #   Manifest: https://fsl.fmrib.ox.ac.uk/fsldownloads/manifest.json
-  #             https://fsl.fmrib.ox.ac.uk/fsldownloads/manifest.json
-
-
-  # Possible FSL install, h/t https://github.com/MPIB/singularity-fsl
-#  apt-get -y install wget python-minimal libgomp1 ca-certificates \
-#          libglu1-mesa libgl1-mesa-glx libsm6 libice6 libxt6 \
-#          libjpeg62-turbo libpng16-16 libxrender1 libxcursor1 \
-#          libxinerama1 libfreetype6 libxft2 libxrandr2 libmng1 \
-#          libgtk2.0-0 libpulse0 libasound2 libcaca0 libopenblas-base \
-#          bzip2 dc bc
-#  wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
-#  python2 fslinstaller.py -d /usr/local/fsl -V 6.0.2
-#  echo '/usr/local/fsl/lib' > /etc/ld.so.conf.d/fsl.conf
-#  ldconfig
-#  apt-get clean && apt-get -y autoremove
-
+  
+  # Clean up
+  apt-get clean && apt-get -y autoremove
 
 
 %environment
 
   # FSL
-#  export FSLDIR=/usr/local/fsl
-#  . ${FSLDIR}/etc/fslconf/fsl.sh
-#  export PATH=${FSLDIR}/bin:${PATH}
-	
-  # Spider-specific code
-  export PATH="/opt/src:${PATH}"
+  export FSLDIR=/usr/local/fsl
+  . ${FSLDIR}/etc/fslconf/fsl.sh
+  export PATH=${FSLDIR}/bin:${PATH}
 
 
 %runscript
-  xvfb_wrapper.sh "$@"
+  bash "$@"
+
