@@ -15,8 +15,6 @@ From: ubuntu:bionic-20191029
 %post
   apt-get update
 
-  apt-get install -y wget
-
   # Workaround for filename case collision in linux-libc-dev
   # https://stackoverflow.com/questions/15599592/compiling-linux-kernel-error-xt-connmark-h
   # https://superuser.com/questions/1238903/cant-install-linux-libc-dev-in-ubuntu-on-windows
@@ -29,59 +27,47 @@ From: ubuntu:bionic-20191029
   ar rcs linux-libc-dev*.deb debian-binary control.tar.xz data.tar.xz
   dpkg -i linux-libc-dev*.deb
   cd .. && rm -r pkgtemp
-  
-  apt-get install -y xvfb                      # for headless fsleyes
-  apt-get install -y python3 python3-pip       # everybody needs python
+
+  apt-get install -y wget                      # So useful
+  apt-get install -y xvfb                      # for headless X11
+  apt-get install -y python3-pip               # Also so useful
   apt-get install -y ghostscript imagemagick   # for PDF generation
-  #apt-get install freeglut3 libsdl1.2debian    # wxpython runtime dependencies  
- 
+
   # Python libraries for assessor code
+  pip3 install --upgrade pip3
   pip3 install nibabel pandas
 
-  # wxpython for fsleyes
-  #pip3 install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk2/ubuntu-18.04/ 'wxPython==4.0.7.post2'
-   
-  # FSLeyes via pip
-  # https://users.fmrib.ox.ac.uk/~paulmc/fsleyes/userdoc/latest/install.html
-  #pip3 install 'fsleyes==0.32.0'
- 
- 
- 
- 
- 
- # FSLeyes binary
- #fsleyes_tgz=FSLeyes-0.32.0-ubuntu1804.tar.gz
- #cd /opt
- #wget -q https://fsl.fmrib.ox.ac.uk/fsldownloads/fsleyes/${fsleyes_tgz}
- #tar zxf ${fsleyes_tgz}
- #rm ${fsleyes_tgz}
-  
-#  apt-get install -y zip unzip
-    
+  # FSL info:
+  #   Mirrors:  https://fsl.fmrib.ox.ac.uk/fsldownloads/fslmirrorlist.txt
+  #                 (the only mirror is https://fsl.fmrib.ox.ac.uk/fsldownloads/)
+  #   Manifest: https://fsl.fmrib.ox.ac.uk/fsldownloads/manifest.json
+  #             https://fsl.fmrib.ox.ac.uk/fsldownloads/manifest.json
 
-#  apt-get install -y xvfb ghostscript imagemagick python python-pip
-  
 
-  # Get fsleyes via pip. wxpython and pathlib2 are required first
-  #   https://github.com/wxWidgets/Phoenix/blob/master/README.rst#prerequisites
-  #   https://wxpython.org/pages/downloads/
-#  apt-get install -y dpkg-dev build-essential freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev \
-#      libgstreamer-plugins-base1.0-dev libgtk-3-dev libjpeg-dev libnotify-dev libpng-dev \
-#      libsdl1.2-dev libsdl2-dev libsm-dev libtiff-dev libwebkit2gtk-4.0-dev libxtst-dev
-#  pip install -f \
-#      https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
-#  pip install pathlib2 fsleyes
+  # Possible FSL install, h/t https://github.com/MPIB/singularity-fsl
+#  apt-get -y install wget python-minimal libgomp1 ca-certificates \
+#          libglu1-mesa libgl1-mesa-glx libsm6 libice6 libxt6 \
+#          libjpeg62-turbo libpng16-16 libxrender1 libxcursor1 \
+#          libxinerama1 libfreetype6 libxft2 libxrandr2 libmng1 \
+#          libgtk2.0-0 libpulse0 libasound2 libcaca0 libopenblas-base \
+#          bzip2 dc bc
+#  wget https://fsl.fmrib.ox.ac.uk/fsldownloads/fslinstaller.py
+#  python2 fslinstaller.py -d /usr/local/fsl -V 6.0.2
+#  echo '/usr/local/fsl/lib' > /etc/ld.so.conf.d/fsl.conf
+#  ldconfig
+#  apt-get clean && apt-get -y autoremove
 
-  # Fix imagemagick policy to allow PDF output. See https://usn.ubuntu.com/3785-1/
-#  sed -i 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/' \
-#    /etc/ImageMagick-6/policy.xml
-
-  # Create input/output directories for binding
-  mkdir /INPUTS && mkdir /OUTPUTS
 
 
 %environment
-  PATH="/opt/src:${PATH}"
+
+  # FSL
+#  export FSLDIR=/usr/local/fsl
+#  . ${FSLDIR}/etc/fslconf/fsl.sh
+#  export PATH=${FSLDIR}/bin:${PATH}
+	
+  # Spider-specific code
+  export PATH="/opt/src:${PATH}"
 
 
 %runscript
