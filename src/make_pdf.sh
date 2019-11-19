@@ -47,14 +47,17 @@ do
   esac
 done
 
+echo "Making PDF of ${dwi_file} in ${outdir}"
+
+# Working directory
+cd ${outdir}
 
 # 3-pane view
 fsleyes render \
   --scene ortho --hideCursor --layout grid \
-  --outfile "${outdir}"/ortho.png --size 1000 1000 \
+  --outfile ortho.png --size 1000 1000 \
   "${dwi_file}" \
   --interpolation linear
-
 
 # Convert to PDF
 info="dwi_reorder\n${project} ${subject} ${session} ${scan}"
@@ -69,7 +72,7 @@ convert \
 -gravity NorthWest -pointsize 24 -annotate +20+20 "${info}" \
 -gravity SouthWest -pointsize 24 -annotate +20+200 \
 "First b values:\n$bval\n\nFirst b vectors:\n$bvec" \
-"${outdir}"/dwi_reorder.pdf
+dwi_reorder.pdf
 
 # Clean up
-rm "${outdir}"/ortho.png
+#rm "${outdir}"/ortho.png

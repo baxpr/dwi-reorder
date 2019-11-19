@@ -1,5 +1,5 @@
 #!/bin/sh
-xvfb_wrapper.sh \
+wrapper.sh \
 	--project TESTPROJ \
 	--subject TESTSUBJ \
 	--session TESTSESS \
