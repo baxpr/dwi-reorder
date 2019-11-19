@@ -6,7 +6,7 @@ singularity run \
 --cleanenv \
 --bind INPUTS:/INPUTS \
 --bind OUTPUTS:/OUTPUTS \
-test.simg \
+baxpr-dwi-reorder-master-v1.0.0.simg \
 --project TESTPROJ \
 --subject TESTSUBJ \
 --session TESTSESS \
@@ -15,5 +15,3 @@ test.simg \
 --bval_txt /INPUTS/DTI.bval \
 --bvec_txt /INPUTS/DTI.bvec \
 --outdir /OUTPUTS
-
-
